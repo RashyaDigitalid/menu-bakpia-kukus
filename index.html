@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bakpia Kukus Tugu Jogja — Menu Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #2C3E50;
+    --navy-light: #34495e;
+    --emas: #B19771;
+    --emas-light: #CDB891;
+    --emas-pale: #EDE0C8;
+    --krem: #FAF7F2;
+    --krem-gelap: #F0EAE0;
+    --putih: #FFFFFF;
+    --teks: #2C3E50;
+    --teks-redup: #8C7B6B;
+    --shadow: rgba(44,62,80,0.12);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--krem); color:var(--teks); font-family:'Poppins',sans-serif; min-height:100vh; }
+
+  /* ===== OUTLET SCREEN ===== */
+  #outlet-screen { min-height:100vh; display:flex; flex-direction:column; position:relative; overflow:hidden; }
+
+  .outlet-bg {
+    position:absolute; inset:0;
+    background:
+      linear-gradient(180deg, rgba(15,10,3,0.75) 0%, rgba(25,18,8,0.5) 45%, rgba(15,10,3,0.88) 100%),
+      url('https://bakpiatugujogja.com/wp-content/uploads/2021/08/Bakpia-Kukus-Tugu-Jogja-Cokelat.jpg') center/cover no-repeat;
+    z-index:0;
+  }
+  .outlet-bg::after {
+    content:''; position:absolute; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    z-index:1;
+  }
+  .outlet-deco { position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,transparent,var(--emas),var(--emas-light),var(--emas),transparent); z-index:2; }
+
+  .outlet-content { position:relative; z-index:3; display:flex; flex-direction:column; min-height:100vh; padding-bottom:32px; }
+
+  .lang-bar { display:flex; justify-content:flex-end; padding:14px 16px 0; }
+  .lang-toggle { display:flex; background:rgba(255,255,255,0.1); border:1px solid rgba(177,151,113,0.35); border-radius:20px; overflow:hidden; }
+  .lang-btn { background:none; border:none; color:rgba(237,224,200,0.6); font-family:'Poppins',sans-serif; font-size:11px; font-weight:600; padding:5px 12px; cursor:pointer; letter-spacing:0.5px; transition:all 0.2s; }
+  .lang-btn.active { background:var(--emas); color:var(--navy); border-radius:20px; }
+
+  .outlet-header { padding:24px 24px 16px; text-align:center; }
+  .outlet-header::after { content:''; display:block; width:50px; height:1px; background:linear-gradient(90deg,transparent,var(--emas),transparent); margin:14px auto 0; }
+  .brand-logo { font-family:'Playfair Display',serif; font-size:30px; color:var(--putih); line-height:1.2; text-shadow:0 2px 16px rgba(0,0,0,0.6); }
+  .brand-logo span { color:var(--emas-light); }
+  .brand-slogan { font-size:11px; color:var(--emas-pale); letter-spacing:2px; text-transform:uppercase; margin-top:6px; opacity:0.85; }
+  .brand-badge { display:inline-block; background:rgba(177,151,113,0.2); border:1px solid rgba(177,151,113,0.45); color:var(--emas-light); font-size:11px; padding:5px 14px; border-radius:20px; margin-top:10px; backdrop-filter:blur(4px); }
+
+  .outlet-title { text-align:center; color:var(--emas-pale); font-size:12px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; padding:0 24px 14px; opacity:0.75; }
+
+  .outlet-list { padding:0 14px; display:flex; flex-direction:column; gap:10px; }
+
+  .outlet-card { background:rgba(10,8,3,0.45); border:1px solid rgba(177,151,113,0.28); border-radius:14px; padding:14px 16px; cursor:pointer; transition:all 0.25s; backdrop-filter:blur(8px); animation:fadeUp 0.4s ease both; }
+  .outlet-card:nth-child(1){animation-delay:0.05s} .outlet-card:nth-child(2){animation-delay:0.1s} .outlet-card:nth-child(3){animation-delay:0.15s} .outlet-card:nth-child(4){animation-delay:0.2s} .outlet-card:nth-child(5){animation-delay:0.25s} .outlet-card:nth-child(6){animation-delay:0.3s}
+  .outlet-card:hover,.outlet-card:active { background:rgba(177,151,113,0.18); border-color:var(--emas); transform:translateX(3px); }
+
+  .outlet-card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+  .outlet-card-kiri { flex:1; }
+  .outlet-card-nama { font-size:14px; font-weight:700; color:var(--putih); }
+  .outlet-card-alamat { font-size:11px; color:var(--emas-pale); opacity:0.75; margin-top:3px; line-height:1.4; }
+  .outlet-arrow { color:var(--emas); font-size:20px; opacity:0.7; flex-shrink:0; padding-top:2px; }
+
+  .outlet-card-bottom { display:flex; align-items:center; justify-content:space-between; margin-top:10px; padding-top:8px; border-top:1px solid rgba(177,151,113,0.15); gap:6px; flex-wrap:wrap; }
+  .outlet-jam { font-size:11px; color:var(--emas-light); }
+  .jam-badge { display:inline-block; background:rgba(46,204,113,0.15); border:1px solid rgba(46,204,113,0.3); color:#7dcea0; font-size:9px; padding:2px 7px; border-radius:8px; }
+  .jam-badge.nonstop { background:rgba(241,196,15,0.15); border-color:rgba(241,196,15,0.3); color:#f9e04b; }
+
+  .countdown-chip { font-size:11px; font-weight:600; padding:4px 10px; border-radius:10px; }
+  .countdown-chip.open { background:rgba(46,204,113,0.15); border:1px solid rgba(46,204,113,0.3); color:#7dcea0; }
+  .countdown-chip.closed { background:rgba(231,76,60,0.15); border:1px solid rgba(231,76,60,0.3); color:#e87a6e; }
+
+  .maps-btn { display:inline-flex; align-items:center; gap:4px; background:rgba(66,133,244,0.15); border:1px solid rgba(66,133,244,0.35); border-radius:8px; color:#90c4ff; font-family:'Poppins',sans-serif; font-size:11px; font-weight:600; padding:5px 10px; text-decoration:none; transition:background 0.2s; white-space:nowrap; }
+  .maps-btn:hover { background:rgba(66,133,244,0.28); }
+
+  /* ===== MENU SCREEN ===== */
+  #menu-screen { display:none; }
+
+  .menu-header { background:var(--navy); padding:18px 16px 14px; position:relative; overflow:hidden; }
+  .menu-header::before { content:''; position:absolute; top:0;left:0;right:0; height:3px; background:linear-gradient(90deg,var(--emas),var(--emas-light),var(--emas)); }
+  .header-top { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .back-btn { background:rgba(255,255,255,0.1); border:1px solid rgba(177,151,113,0.3); border-radius:8px; color:var(--emas-light); font-size:20px; width:36px;height:36px; cursor:pointer; display:flex;align-items:center;justify-content:center; flex-shrink:0; transition:background 0.2s; }
+  .back-btn:hover { background:rgba(177,151,113,0.2); }
+  .header-brand { flex:1; }
+  .header-brand-nama { font-family:'Playfair Display',serif; font-size:20px; color:var(--putih); line-height:1.2; }
+  .header-brand-nama span { color:var(--emas-light); }
+  .header-brand-slogan { font-size:10px; color:var(--emas-pale); opacity:0.7; letter-spacing:1px; text-transform:uppercase; }
+
+  .menu-lang-toggle { display:flex; background:rgba(255,255,255,0.08); border:1px solid rgba(177,151,113,0.3); border-radius:16px; overflow:hidden; flex-shrink:0; }
+  .menu-lang-btn { background:none; border:none; color:rgba(237,224,200,0.55); font-family:'Poppins',sans-serif; font-size:10px; font-weight:700; padding:4px 10px; cursor:pointer; transition:all 0.2s; }
+  .menu-lang-btn.active { background:var(--emas); color:var(--navy); border-radius:16px; }
+
+  .outlet-info-bar { background:rgba(177,151,113,0.12); border:1px solid rgba(177,151,113,0.22); border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .outlet-info-nama { font-size:13px; font-weight:600; color:var(--emas-light); }
+  .outlet-info-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:3px; }
+  .outlet-info-jam { font-size:11px; color:var(--emas-pale); opacity:0.8; }
+  .outlet-countdown-display { font-size:11px; font-weight:600; padding:3px 8px; border-radius:8px; }
+  .outlet-countdown-display.open { background:rgba(46,204,113,0.15); border:1px solid rgba(46,204,113,0.3); color:#7dcea0; }
+  .outlet-countdown-display.closed { background:rgba(231,76,60,0.15); border:1px solid rgba(231,76,60,0.3); color:#e87a6e; }
+  .outlet-maps-link { display:inline-flex; align-items:center; gap:4px; background:rgba(66,133,244,0.12); border:1px solid rgba(66,133,244,0.3); border-radius:8px; color:#90c4ff; font-size:10px; font-weight:600; padding:4px 8px; text-decoration:none; white-space:nowrap; margin-top:5px; }
+  .ganti-outlet-btn { background:none; border:1px solid rgba(177,151,113,0.4); border-radius:8px; color:var(--emas-light); font-family:'Poppins',sans-serif; font-size:11px; padding:5px 10px; cursor:pointer; transition:background 0.2s; white-space:nowrap; }
+  .ganti-outlet-btn:hover { background:rgba(177,151,113,0.2); }
+
+  .nav-wrap { background:var(--putih); border-bottom:1px solid var(--krem-gelap); position:sticky; top:0; z-index:100; overflow-x:auto; scrollbar-width:none; box-shadow:0 2px 12px var(--shadow); }
+  .nav-wrap::-webkit-scrollbar{display:none}
+  .nav { display:flex; min-width:max-content; padding:0 12px; }
+  .nav-btn { background:none; border:none; color:var(--teks-redup); font-family:'Poppins',sans-serif; font-size:12px; font-weight:600; padding:14px 14px; cursor:pointer; border-bottom:3px solid transparent; transition:all 0.2s; white-space:nowrap; }
+  .nav-btn.active { color:var(--navy); border-bottom-color:var(--emas); }
+  .nav-btn:hover:not(.active) { color:var(--navy); }
+
+  .content { padding:16px; max-width:480px; margin:0 auto; }
+  .tab-section{display:none} .tab-section.active{display:block}
+
+  .hero-banner { background:linear-gradient(135deg,var(--navy) 0%,#1a252f 100%); border-radius:16px; padding:20px; margin-bottom:16px; position:relative; overflow:hidden; }
+  .hero-banner::before{content:'🥮';position:absolute;right:-10px;bottom:-10px;font-size:80px;opacity:0.1;}
+  .hero-banner::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--emas),var(--emas-light));}
+  .hero-tag { display:inline-block; background:rgba(177,151,113,0.2); border:1px solid rgba(177,151,113,0.4); color:var(--emas-light); font-size:10px; padding:3px 10px; border-radius:10px; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+  .hero-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--putih);line-height:1.3;}
+  .hero-title span{color:var(--emas-light);}
+  .hero-desc{font-size:12px;color:var(--emas-pale);opacity:0.75;margin-top:6px;line-height:1.6;}
+  .hero-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+  .hero-chip{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:var(--emas-pale);font-size:11px;padding:4px 10px;border-radius:20px;}
+
+  .cat-label{font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);margin:20px 0 12px;display:flex;align-items:center;gap:8px;}
+  .cat-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--emas-pale),transparent);}
+
+  .menu-card{background:var(--putih);border-radius:16px;margin-bottom:12px;overflow:hidden;box-shadow:0 2px 16px var(--shadow);border:1px solid var(--krem-gelap);transition:transform 0.2s,box-shadow 0.2s;}
+  .menu-card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(44,62,80,0.16);}
+  .card-img{width:100%;height:160px;object-fit:cover;display:block;background:var(--krem-gelap);}
+  .card-img-placeholder{width:100%;height:120px;background:linear-gradient(135deg,var(--krem-gelap),var(--emas-pale));display:flex;align-items:center;justify-content:center;font-size:40px;}
+  .card-body{padding:14px;}
+  .card-badges{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
+  .cbadge{font-size:10px;padding:3px 8px;border-radius:8px;font-weight:600;}
+  .cbadge.bestseller{background:rgba(177,151,113,0.15);color:var(--emas);border:1px solid rgba(177,151,113,0.3);}
+  .cbadge.baru{background:rgba(44,62,80,0.08);color:var(--navy);border:1px solid rgba(44,62,80,0.15);}
+  .cbadge.premium{background:rgba(155,89,182,0.1);color:#8e44ad;border:1px solid rgba(155,89,182,0.2);}
+  .card-nama{font-size:15px;font-weight:700;color:var(--navy);line-height:1.3;}
+  .card-desc{font-size:12px;color:var(--teks-redup);margin-top:4px;line-height:1.5;}
+  .card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--krem-gelap);}
+  .card-harga{font-family:'Playfair Display',serif;font-size:20px;color:var(--navy);font-weight:700;}
+  .card-harga-note{font-size:10px;color:var(--teks-redup);font-family:'Poppins',sans-serif;font-weight:400;}
+  .order-btn{background:var(--navy);color:var(--putih);border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;padding:8px 14px;cursor:pointer;transition:background 0.2s,transform 0.15s;text-decoration:none;display:inline-block;}
+  .order-btn:hover{background:var(--navy-light);transform:scale(1.02);}
+
+  .card-horizontal{background:var(--putih);border-radius:16px;margin-bottom:12px;overflow:hidden;box-shadow:0 2px 16px var(--shadow);border:1px solid var(--krem-gelap);display:flex;transition:transform 0.2s;}
+  .card-horizontal:hover{transform:translateY(-2px);}
+  .card-h-img{width:100px;flex-shrink:0;background:linear-gradient(135deg,var(--krem-gelap),var(--emas-pale));display:flex;align-items:center;justify-content:center;font-size:36px;}
+  .card-h-body{padding:12px;flex:1;display:flex;flex-direction:column;justify-content:space-between;}
+  .card-h-nama{font-size:14px;font-weight:700;color:var(--navy);}
+  .card-h-desc{font-size:11px;color:var(--teks-redup);margin-top:3px;line-height:1.4;}
+  .card-h-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+  .card-h-harga{font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);font-weight:700;}
+  .card-h-note{font-size:10px;color:var(--teks-redup);font-family:'Poppins',sans-serif;}
+
+  .payment-card{background:var(--putih);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 12px var(--shadow);border:1px solid var(--krem-gelap);}
+  .payment-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+  .payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .payment-item{background:var(--krem);border:1px solid var(--krem-gelap);border-radius:10px;padding:10px 12px;text-align:center;font-size:12px;font-weight:600;color:var(--navy);}
+  .payment-item span{display:block;font-size:18px;margin-bottom:4px;}
+
+  .tentang-card{background:var(--putih);border-radius:16px;padding:20px;margin-bottom:12px;box-shadow:0 2px 12px var(--shadow);border:1px solid var(--krem-gelap);}
+  .tentang-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);margin-bottom:10px;}
+  .tentang-text{font-size:13px;color:var(--teks-redup);line-height:1.7;}
+  .pain-point{background:linear-gradient(135deg,#fff9f0,#fef5e4);border:1px solid var(--emas-pale);border-left:3px solid var(--emas);border-radius:10px;padding:12px 14px;margin-top:12px;}
+  .pain-title{font-size:12px;font-weight:700;color:var(--emas);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;}
+  .pain-item{font-size:12px;color:var(--teks-redup);padding:5px 0;display:flex;gap:8px;border-bottom:1px dashed var(--krem-gelap);line-height:1.4;}
+  .pain-item:last-child{border-bottom:none}
+  .pain-item::before{content:'✓';color:var(--emas);font-weight:700;flex-shrink:0;}
+
+  .vs-card{background:var(--putih);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 12px var(--shadow);border:1px solid var(--krem-gelap);overflow-x:auto;}
+  .vs-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--navy);margin-bottom:12px;}
+  .vs-table{width:100%;border-collapse:collapse;font-size:11px;}
+  .vs-table th{background:var(--navy);color:var(--putih);padding:8px 10px;text-align:left;font-weight:600;}
+  .vs-table th:first-child{border-radius:8px 0 0 0} .vs-table th:last-child{border-radius:0 8px 0 0}
+  .vs-table td{padding:8px 10px;border-bottom:1px solid var(--krem-gelap);color:var(--teks-redup);vertical-align:top;}
+  .vs-table tr.kita td{background:rgba(177,151,113,0.08);font-weight:600;color:var(--navy);}
+  .vs-table tr.kita td:first-child{border-left:3px solid var(--emas);}
+
+  .wa-sticky{position:fixed;bottom:0;left:0;right:0;padding:12px 16px 20px;background:linear-gradient(transparent,var(--krem) 30%);z-index:200;display:none;}
+  .wa-sticky.visible{display:block}
+  .wa-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;color:white;text-decoration:none;font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;padding:15px;border-radius:14px;width:100%;box-shadow:0 4px 20px rgba(37,211,102,0.4);transition:transform 0.15s,box-shadow 0.15s;letter-spacing:0.3px;}
+  .wa-btn:active{transform:scale(0.98);box-shadow:0 2px 10px rgba(37,211,102,0.2);}
+
+  .footer{text-align:center;padding:16px 16px 100px;font-size:11px;color:var(--teks-redup);}
+  .footer strong{color:var(--emas);}
+  .footer-line{width:40px;height:1px;background:var(--emas-pale);margin:8px auto;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- ===== OUTLET SELECTOR ===== -->
+<div id="outlet-screen">
+  <div class="outlet-bg"></div>
+  <div class="outlet-deco"></div>
+  <div class="outlet-content">
+
+    <div class="lang-bar">
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('id')">🇮🇩 ID</button>
+        <button class="lang-btn" onclick="setLang('en')">🇬🇧 EN</button>
+      </div>
+    </div>
+
+    <div class="outlet-header">
+      <div class="brand-logo">Bakpia Kukus <span>Tugu Jogja</span></div>
+      <div class="brand-slogan">The First Bakpia Kukus in Jogja</div>
+      <div class="brand-badge">🥮 <span class="t" data-id="Oleh-oleh Wong Jogja" data-en="Traditional Jogja Souvenir">Oleh-oleh Wong Jogja</span></div>
+    </div>
+
+    <div class="outlet-title t" data-id="Pilih Outlet Terdekat Anda" data-en="Select Your Nearest Outlet">Pilih Outlet Terdekat Anda</div>
+
+    <div class="outlet-list">
+
+      <div class="outlet-card" onclick="pilihOutlet('Stasiun Tugu','Pintu Selatan, Jl. Pringgokusuman, Gedong Tengen','06.00','21.00','https://maps.google.com/?q=Bakpia+Kukus+Tugu+Jogja+Stasiun+Tugu+Yogyakarta')">
+        <div class="outlet-card-top">
+          <div class="outlet-card-kiri">
+            <div class="outlet-card-nama">🚂 <span class="t" data-id="Store Stasiun Tugu" data-en="Tugu Train Station">Store Stasiun Tugu</span></div>
+            <div class="outlet-card-alamat">Pintu Selatan · Jl. Pringgokusuman, Gedong Tengen</div>
+          </div>
+          <div class="outlet-arrow">›</div>
+        </div>
+        <div class="outlet-card-bottom">
+          <div class="outlet-jam">⏰ 06.00 – 21.00</div>
+          <div class="countdown-chip open" id="cd-tugu"></div>
+          <a class="maps-btn" href="https://maps.google.com/?q=Bakpia+Kukus+Tugu+Jogja+Stasiun+Tugu+Yogyakarta" target="_blank" onclick="event.stopPropagation()">📍 <span class="t" data-id="Peta" data-en="Map">Peta</span></a>
+        </div>
+      </div>
+
+      <div class="outlet-card" onclick="pilihOutlet('Stasiun Lempuyangan','Jl. Lempuyangan, Bausasran, Danurejan','06.00','22.00','https://maps.google.com/?q=Bakpia+Kukus+Tugu+Jogja+Stasiun+Lempuyangan+Yogyakarta')">
+        <div class="outlet-card-top">
+          <div class="outlet-card-kiri">
+            <div class="outlet-card-nama">🚉 <span class="t" data-id="Store Stasiun Lempuyangan" data-en="Lempuyangan Train Station">Store Stasiun Lempuyangan</span></div>
+            <div class="outlet-card-alamat">Jl. Lempuyangan · Bausasran, Danurejan</div>
+          </div>
+          <div class="outlet-arrow">›</div>
+        </div>
+        <div class="outlet-card-bottom">
+          <div class="outlet-jam">⏰ 06.00 – 22.00</div>
+          <div class="countdown-chip open" id="cd-lempuyangan"></div>
+          <a class="maps-btn" href="https://maps.google.com/?q=Bakpia+Kukus+Tugu+Jogja+Stasiun+Lempuyangan+Yogyakarta" target="_blank" onclick="event.stopPropagation()">📍 <span class="t" data-id="Peta" data-en="Map">Peta</span></a>
+        </div>
+      </div>
+
+      <div class="outlet-card" onclick="pilihOutlet('Bandara YIA','Pintu Zona Kedatangan, Kulonprogo','00.00','23.59','https://maps.google.com/?q=Yogyakarta+International+Airport+YIA+Kulonprogo')">
+        <div class="outlet-card-top">
+          <div class="outlet-card-kiri">
+            <div class="outlet-card-nama">✈️ <span class="t" data-id="Store Bandara YIA" data-en="YIA Airport Store">Store Bandara YIA</span></div>
+            <div class="outlet-card-alamat"><span class="t" data-id="Pintu Zona Kedatangan · Kulonprogo" data-en="Arrival Zone Gate · Kulonprogo">Pintu Zona Kedatangan · Kulonprogo</span></div>
+          </div>
+          <div class="outlet-arrow">›</div>
+        </div>
+        <div class="outlet-card-bottom">
+          <div class="outlet-jam">⏰ <span class="t" data-id="24 Jam" data-en="24 Hours">24 Jam</span></div>
+          <span class="jam-badge nonstop">Non-Stop</span>
+          <a class="maps-btn" href="https://maps.google.com/?q=Yogyakarta+International+Airport+YIA+Kulonprogo" target="_blank" onclick="event.stopPropagation()">📍 <span class="t" data-id="Peta" data-en="Map">Peta</span></a>
+        </div>
+      </div>
+
+      <div class="outlet-card" onclick="pilihOutlet('Titik Nol Malioboro','Jl. KH Ahmad Dahlan No. 10, dekat Malioboro','06.00','22.00','https://maps.google.com/?q=Jl.+KH+Ahmad+Dahlan+No.10+Yogyakarta')">
+        <div class="outlet-card-top">
+          <div class="outlet-card-kiri">
+            <div class="outlet-card-nama">🏛️ <span class="t" data-id="Store Titik Nol" data-en="Titik Nol Store">Store Titik Nol</span></div>
+            <div class="outlet-card-alamat">Jl. KH Ahmad Dahlan No. 10 · <span class="t" data-id="Dekat Malioboro" data-en="Near Malioboro">Dekat Malioboro</span></div>
+          </div>
+          <div class="outlet-arrow">›</div>
+        </div>
+        <div class="outlet-card-bottom">
+          <div class="outlet-jam">⏰ 06.00 – 22.00</div>
+          <div class="countdown-chip open" id="cd-titikol"></div>
+          <a class="maps-btn" href="https://maps.google.com/?q=Jl.+KH+Ahmad+Dahlan+No.10+Yogyakarta" target="_blank" onclick="event.stopPropagation()">📍 <span class="t" data-id="Peta" data-en="Map">Peta</span></a>
+        </div>
+      </div>
+
+      <div class="outlet-card" onclick="pilihOutlet('Pusat Gondomanan','Jl. Mayor Suryotomo No. 25 (Toko Terbesar)','06.00','22.00','https://maps.google.com/?q=Jl.+Mayor+Suryotomo+No.25+Yogyakarta')">
+        <div class="outlet-card-top">
+          <div class="outlet-card-kiri">
+            <div class="outlet-card-nama">🏪 <span class="t" data-id="Store Pusat Gondomanan" data-en="Gondomanan Main Store">Store Pusat Gondomanan</span></div>
+            <div class="outlet-card-alamat">Jl. Mayor Suryotomo No. 25 · <span class="t" data-id="Toko Terbesar" data-en="Largest Store">Toko Terbesar</span></div>
+          </div>
+          <div class="outlet-arrow">›</div>
+        </div>
+        <div class="outlet-card-bottom">
+          <div class="outlet-jam">⏰ 06.00 – 22.00</div>
+          <div class="countdown-chip open" id="cd-gondomanan"></div>
+          <a class="maps-btn" href="https://maps.google.com/?q=Jl.+Mayor+Suryotomo+No.25+Yogyakarta" target="_blank" onclick="event.stopPropagation()">📍 <span class="t" data-id="Peta" data-en="Map">Peta</span></a>
+        </div>
+      </div>
+
+      <div class="outlet-card" onclick="pilihOutlet('Raya Solo','Jl. Solo KM 9, dekat Bandara Adisutjipto','06.00','22.00','https://maps.google.com/?q=Jl.+Solo+KM+9+Yogyakarta')">
+        <div class="outlet-card-top">
+          <div class="outlet-card-kiri">
+            <div class="outlet-card-nama">🛣️ <span class="t" data-id="Store Raya Solo" data-en="Solo Highway Store">Store Raya Solo</span></div>
+            <div class="outlet-card-alamat">Jl. Solo KM 9 · <span class="t" data-id="Dekat Bandara Adisutjipto" data-en="Near Adisutjipto Airport">Dekat Bandara Adisutjipto</span></div>
+          </div>
+          <div class="outlet-arrow">›</div>
+        </div>
+        <div class="outlet-card-bottom">
+          <div class="outlet-jam">⏰ 06.00 – 22.00</div>
+          <div class="countdown-chip open" id="cd-solo"></div>
+          <a class="maps-btn" href="https://maps.google.com/?q=Jl.+Solo+KM+9+Yogyakarta" target="_blank" onclick="event.stopPropagation()">📍 <span class="t" data-id="Peta" data-en="Map">Peta</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== MENU SCREEN ===== -->
+<div id="menu-screen">
+  <div class="menu-header">
+    <div class="header-top">
+      <button class="back-btn" onclick="kembali()">‹</button>
+      <div class="header-brand">
+        <div class="header-brand-nama">Bakpia Kukus <span>Tugu Jogja</span></div>
+        <div class="header-brand-slogan">The First Bakpia Kukus in Jogja</div>
+      </div>
+      <div class="menu-lang-toggle">
+        <button class="menu-lang-btn active" onclick="setLang('id')">ID</button>
+        <button class="menu-lang-btn" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+    <div class="outlet-info-bar">
+      <div style="flex:1">
+        <div class="outlet-info-nama" id="nama-outlet-display">—</div>
+        <div class="outlet-info-row">
+          <div class="outlet-info-jam" id="jam-outlet-display">—</div>
+          <div class="outlet-countdown-display open" id="menu-countdown"></div>
+        </div>
+        <a class="outlet-maps-link" id="maps-outlet-link" href="#" target="_blank">📍 <span class="t" data-id="Buka di Google Maps" data-en="Open in Google Maps">Buka di Google Maps</span></a>
+      </div>
+      <button class="ganti-outlet-btn t" onclick="kembali()" data-id="Ganti Outlet" data-en="Change Outlet">Ganti Outlet</button>
+    </div>
+  </div>
+
+  <div class="nav-wrap">
+    <div class="nav">
+      <button class="nav-btn active" onclick="gantiTab('reguler',this)"><span class="t" data-id="🥮 Bakpia Kukus" data-en="🥮 Bakpia Kukus">🥮 Bakpia Kukus</span></button>
+      <button class="nav-btn" onclick="gantiTab('travelpack',this)"><span class="t" data-id="🎁 Travel Pack" data-en="🎁 Travel Pack">🎁 Travel Pack</span></button>
+      <button class="nav-btn" onclick="gantiTab('panggang',this)"><span class="t" data-id="🔥 Panggang" data-en="🔥 Baked">🔥 Panggang</span></button>
+      <button class="nav-btn" onclick="gantiTab('tentang',this)"><span class="t" data-id="ℹ️ Tentang" data-en="ℹ️ About">ℹ️ Tentang</span></button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- TAB REGULER -->
+    <div id="tab-reguler" class="tab-section active">
+      <div class="hero-banner">
+        <div class="hero-tag">✨ Signature Product</div>
+        <div class="hero-title">Bakpia Kukus <span>Original</span></div>
+        <div class="hero-desc t" data-id="Dikukus segar setiap hari · Tekstur lembut & isian lumer premium" data-en="Steamed fresh daily · Soft texture with premium melting filling">Dikukus segar setiap hari · Tekstur lembut & isian lumer premium</div>
+        <div class="hero-chips">
+          <div class="hero-chip t" data-id="🥮 Isi 10 pcs" data-en="🥮 10 pcs/box">🥮 Isi 10 pcs</div>
+          <div class="hero-chip t" data-id="📦 Kemasan premium" data-en="📦 Premium packaging">📦 Kemasan premium</div>
+          <div class="hero-chip">⏰ Fresh daily</div>
+        </div>
+      </div>
+
+      <div class="cat-label t" data-id="✨ Varian Original" data-en="✨ Original Flavors">✨ Varian Original</div>
+
+      <div class="menu-card">
+        <img class="card-img" src="https://bakpiatugujogja.com/wp-content/uploads/2021/08/Bakpia-Kukus-Tugu-Jogja-Cokelat.jpg" alt="Cokelat" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="card-img-placeholder" style="display:none">🍫</div>
+        <div class="card-body">
+          <div class="card-badges"><span class="cbadge bestseller">⭐ Best Seller</span></div>
+          <div class="card-nama t" data-id="Bakpia Kukus Cokelat" data-en="Steamed Chocolate Bakpia">Bakpia Kukus Cokelat</div>
+          <div class="card-desc t" data-id="Kulit putih lembut dengan isian cokelat lumer premium. Favorit sepanjang masa." data-en="Soft white skin with premium melting chocolate filling. An all-time favorite.">Kulit putih lembut dengan isian cokelat lumer premium. Favorit sepanjang masa.</div>
+          <div class="card-footer">
+            <div><div class="card-harga">Rp 38.000</div><div class="card-harga-note t" data-id="Isi 10 pcs" data-en="10 pcs/box">Isi 10 pcs</div></div>
+            <a class="order-btn t" id="order-cokelat" href="#" data-id="🛒 Pesan" data-en="🛒 Order">🛒 Pesan</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img class="card-img" src="https://bakpiatugujogja.com/wp-content/uploads/2021/08/Bakpia-Kukus-Tugu-Jogja-Keju.jpg" alt="Keju" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="card-img-placeholder" style="display:none">🧀</div>
+        <div class="card-body">
+          <div class="card-badges"><span class="cbadge bestseller">⭐ Best Seller</span></div>
+          <div class="card-nama t" data-id="Bakpia Kukus Keju" data-en="Steamed Cheese Bakpia">Bakpia Kukus Keju</div>
+          <div class="card-desc t" data-id="Perpaduan gurih keju pilihan dengan tekstur bolu kukus yang ringan dan lembut." data-en="Savory cheese blend with a light, fluffy steamed texture.">Perpaduan gurih keju pilihan dengan tekstur bolu kukus yang ringan dan lembut.</div>
+          <div class="card-footer">
+            <div><div class="card-harga">Rp 38.000</div><div class="card-harga-note t" data-id="Isi 10 pcs" data-en="10 pcs/box">Isi 10 pcs</div></div>
+            <a class="order-btn t" id="order-keju" href="#" data-id="🛒 Pesan" data-en="🛒 Order">🛒 Pesan</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img class="card-img" src="https://bakpiatugujogja.com/wp-content/uploads/2021/08/Bakpia-Kukus-Tugu-Jogja-KacangHijau.jpg" alt="Kacang Hijau" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="card-img-placeholder" style="display:none">🌿</div>
+        <div class="card-body">
+          <div class="card-badges"><span class="cbadge baru">🌿 <span class="t" data-id="Tradisional" data-en="Traditional">Tradisional</span></span></div>
+          <div class="card-nama t" data-id="Bakpia Kukus Kacang Hijau" data-en="Steamed Mung Bean Bakpia">Bakpia Kukus Kacang Hijau</div>
+          <div class="card-desc t" data-id="Rasa tradisional kacang hijau autentik dalam kemasan modern kukus yang kekinian." data-en="Authentic traditional mung bean flavor in a modern steamed presentation.">Rasa tradisional kacang hijau autentik dalam kemasan modern kukus yang kekinian.</div>
+          <div class="card-footer">
+            <div><div class="card-harga">Rp 38.000</div><div class="card-harga-note t" data-id="Isi 10 pcs" data-en="10 pcs/box">Isi 10 pcs</div></div>
+            <a class="order-btn t" id="order-kacang" href="#" data-id="🛒 Pesan" data-en="🛒 Order">🛒 Pesan</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="card-img-placeholder">🍓</div>
+        <div class="card-body">
+          <div class="card-badges"><span class="cbadge baru">🍓 Fruity</span></div>
+          <div class="card-nama t" data-id="Bakpia Kukus Strawberry" data-en="Steamed Strawberry Bakpia">Bakpia Kukus Strawberry</div>
+          <div class="card-desc t" data-id="Isian selai strawberry segar dengan aroma buah yang kuat. Segar & lumer di mulut." data-en="Fresh strawberry jam filling with a strong fruity aroma. Refreshing and melts in your mouth.">Isian selai strawberry segar dengan aroma buah yang kuat. Segar & lumer di mulut.</div>
+          <div class="card-footer">
+            <div><div class="card-harga">Rp 38.000</div><div class="card-harga-note t" data-id="Isi 10 pcs" data-en="10 pcs/box">Isi 10 pcs</div></div>
+            <a class="order-btn t" id="order-strawberry" href="#" data-id="🛒 Pesan" data-en="🛒 Order">🛒 Pesan</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-label t" data-id="🍵 Varian Premium" data-en="🍵 Premium Flavors">🍵 Varian Premium</div>
+
+      <div class="menu-card">
+        <div class="card-img-placeholder">🍵</div>
+        <div class="card-body">
+          <div class="card-badges"><span class="cbadge premium">🍵 Premium</span><span class="cbadge baru">✨ New</span></div>
+          <div class="card-nama t" data-id="Bakpia Kukus Matcha Jepang" data-en="Japanese Matcha Steamed Bakpia">Bakpia Kukus Matcha Jepang</div>
+          <div class="card-desc t" data-id="Paduan matcha premium asal Jepang dengan isian lembut. Hits di kalangan muda." data-en="Premium Japanese matcha with soft filling. Popular among young foodies.">Paduan matcha premium asal Jepang dengan isian lembut. Hits di kalangan muda.</div>
+          <div class="card-footer">
+            <div><div class="card-harga">Rp 48.000</div><div class="card-harga-note t" data-id="Isi 10 pcs" data-en="10 pcs/box">Isi 10 pcs</div></div>
+            <a class="order-btn t" id="order-matcha" href="#" data-id="🛒 Pesan" data-en="🛒 Order">🛒 Pesan</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-label t" data-id="🍫 Varian Brownies" data-en="🍫 Brownies Series">🍫 Varian Brownies</div>
+
+      <div class="menu-card">
+        <div class="card-img-placeholder">🍫</div>
+        <div class="card-body">
+          <div class="card-badges"><span class="cbadge premium">💎 Premium</span></div>
+          <div class="card-nama t" data-id="Brownies Cokelat" data-en="Chocolate Brownies">Brownies Cokelat</div>
+          <div class="card-desc t" data-id="Tekstur lebih padat & premium. Isian cokelat pekat dengan kulit brownies kukus yang lembab." data-en="Denser & more premium texture. Rich chocolate filling with moist steamed brownies crust.">Tekstur lebih padat & premium. Isian cokelat pekat dengan kulit brownies kukus yang lembab.</div>
+          <div class="card-footer">
+            <div><div class="card-harga">Rp 50.000</div><div class="card-harga-note t" data-id="Isi 10 pcs" data-en="10 pcs/box">Isi 10 pcs</div></div>
+            <a class="order-btn t" id="order-brownies-cokelat" href="#" data-id="🛒 Pesan" data-en="🛒 Order">🛒 Pesan</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="card-img-placeholder">🧀</div>
+        <div class="card-body">
+          <div class="card-badges"><span class="cbadge premium">💎 Premium</span></div>
+          <div class="card-nama t" data-id="Brownies Keju" data-en="Cheese Brownies">Brownies Keju</div>
+          <div class="card-desc t" data-id="Brownies kukus dengan isian keju premium yang gurih dan melimpah." data-en="Steamed brownies with rich and generous premium cheese filling.">Brownies kukus dengan isian keju premium yang gurih dan melimpah.</div>
+          <div class="card-footer">
+            <div><div class="card-harga">Rp 50.000</div><div class="card-harga-note t" data-id="Isi 10 pcs" data-en="10 pcs/box">Isi 10 pcs</div></div>
+            <a class="order-btn t" id="order-brownies-keju" href="#" data-id="🛒 Pesan" data-en="🛒 Order">🛒 Pesan</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-card">
+        <div class="payment-title">💳 <span class="t" data-id="Metode Pembayaran" data-en="Payment Methods">Metode Pembayaran</span></div>
+        <div class="payment-grid">
+          <div class="payment-item"><span>📱</span>QRIS</div>
+          <div class="payment-item"><span>💳</span>Debit / Kredit</div>
+          <div class="payment-item"><span>🛍️</span>ShopeePay</div>
+          <div class="payment-item"><span>💵</span><span class="t" data-id="Tunai" data-en="Cash">Tunai</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB TRAVEL PACK -->
+    <div id="tab-travelpack" class="tab-section">
+      <div class="hero-banner">
+        <div class="hero-tag">🎁 <span class="t" data-id="Oleh-Oleh Praktis" data-en="Practical Souvenir">Oleh-Oleh Praktis</span></div>
+        <div class="hero-title">Travel Pack & <span>Mini Series</span></div>
+        <div class="hero-desc t" data-id="Kemasan ringkas, pas untuk dibawa naik kereta atau pesawat. Isi 6 pcs." data-en="Compact packaging, perfect to carry on trains or planes. 6 pcs/box.">Kemasan ringkas, pas untuk dibawa naik kereta atau pesawat. Isi 6 pcs.</div>
+        <div class="hero-chips">
+          <div class="hero-chip t" data-id="✈️ Cocok naik pesawat" data-en="✈️ Airline-friendly">✈️ Cocok naik pesawat</div>
+          <div class="hero-chip t" data-id="🚂 Praktis di kereta" data-en="🚂 Train-friendly">🚂 Praktis di kereta</div>
+        </div>
+      </div>
+      <div class="cat-label t" data-id="🎁 Travel Pack (Isi 6)" data-en="🎁 Travel Pack (6 pcs)">🎁 Travel Pack (Isi 6)</div>
+      <div class="card-horizontal">
+        <div class="card-h-img">🍫</div>
+        <div class="card-h-body">
+          <div>
+            <div class="card-h-nama t" data-id="Original Cokelat Mini" data-en="Mini Chocolate Original">Original Cokelat Mini</div>
+            <div class="card-h-desc t" data-id="Varian cokelat favorit dalam kemasan travel praktis." data-en="Favorite chocolate in a practical travel pack.">Varian cokelat favorit dalam kemasan travel praktis.</div>
+          </div>
+          <div class="card-h-footer">
+            <div><div class="card-h-harga">Rp 28.000</div><div class="card-h-note t" data-id="Isi 6 pcs" data-en="6 pcs/box">Isi 6 pcs</div></div>
+            <a class="order-btn t" id="order-mini-cokelat" href="#" data-id="🛒 Pesan" data-en="🛒 Order">🛒 Pesan</a>
+          </div>
+        </div>
+      </div>
+      <div class="card-horizontal">
+        <div class="card-h-img">❤️</div>
+        <div class="card-h-body">
+          <div>
+            <div class="card-h-nama">Red Velvet Choco Lava</div>
+            <div class="card-h-desc t" data-id="Varian eksklusif red velvet dengan isian choco lava yang meleleh." data-en="Exclusive red velvet with melting choco lava filling.">Varian eksklusif red velvet dengan isian choco lava yang meleleh.</div>
+          </div>
+          <div class="card-h-footer">
+            <div><div class="card-h-harga">Rp 45.000</div><div class="card-h-note t" data-id="Isi 6 pcs" data-en="6 pcs/box">Isi 6 pcs</div></div>
+            <a class="order-btn t" id="order-redvelvet" href="#" data-id="🛒 Pesan" data-en="🛒 Order">🛒 Pesan</a>
+          </div>
+        </div>
+      </div>
+      <div class="payment-card">
+        <div class="payment-title">💡 <span class="t" data-id="Tips Perjalanan" data-en="Travel Tips">Tips Perjalanan</span></div>
+        <div class="t" style="font-size:12px;color:var(--teks-redup);line-height:1.7" data-id="Pesan dari perjalanan, ambil saat tiba di outlet stasiun. Tidak perlu antre! Tunjukkan bukti pesan WA ke kasir." data-en="Order on the way, pick up when you arrive at the station outlet. No queue! Just show your WhatsApp order confirmation to the cashier.">Pesan dari perjalanan, ambil saat tiba di outlet stasiun. Tidak perlu antre! Tunjukkan bukti pesan WA ke kasir.</div>
+      </div>
+    </div>
+
+    <!-- TAB PANGGANG -->
+    <div id="tab-panggang" class="tab-section">
+      <div class="hero-banner">
+        <div class="hero-tag">🔥 <span class="t" data-id="Varian Baru" data-en="New Variant">Varian Baru</span></div>
+        <div class="hero-title">Bakpia <span class="t" data-id="Panggang" data-en="Baked">Panggang</span></div>
+        <div class="hero-desc t" data-id="Tekstur renyah di luar, lembut di dalam. Varian terbaru yang wajib dicoba!" data-en="Crispy outside, soft inside. The newest variant you must try!">Tekstur renyah di luar, lembut di dalam. Varian terbaru yang wajib dicoba!</div>
+        <div class="hero-chips">
+          <div class="hero-chip t" data-id="🔥 Dipanggang fresh" data-en="🔥 Freshly baked">🔥 Dipanggang fresh</div>
+          <div class="hero-chip t" data-id="📦 Isi 15 pcs" data-en="📦 15 pcs/box">📦 Isi 15 pcs</div>
+        </div>
+      </div>
+      <div class="cat-label t" data-id="🔥 Bakpia Panggang (Isi 15)" data-en="🔥 Baked Bakpia (15 pcs)">🔥 Bakpia Panggang (Isi 15)</div>
+      <div class="menu-card">
+        <div class="card-img-placeholder">🍫</div>
+        <div class="card-body">
+          <div class="card-badges"><span class="cbadge baru">🔥 New Launch</span></div>
+          <div class="card-nama t" data-id="Bakpia Panggang Cokelat" data-en="Baked Chocolate Bakpia">Bakpia Panggang Cokelat</div>
+          <div class="card-desc t" data-id="Kulit panggang renyah dengan isian cokelat lumer. Pengalaman beda dari bakpia kukus — wajib coba!" data-en="Crispy baked crust with melting chocolate filling. A completely different experience — must try!">Kulit panggang renyah dengan isian cokelat lumer. Pengalaman beda dari bakpia kukus — wajib coba!</div>
+          <div class="card-footer">
+            <div><div class="card-harga">Rp 35.000</div><div class="card-harga-note t" data-id="Isi 15 pcs" data-en="15 pcs/box">Isi 15 pcs</div></div>
+            <a class="order-btn t" id="order-panggang" href="#" data-id="🛒 Pesan" data-en="🛒 Order">🛒 Pesan</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB TENTANG -->
+    <div id="tab-tentang" class="tab-section">
+      <div class="tentang-card">
+        <div class="tentang-title t" data-id="Tentang Bakpia Kukus Tugu Jogja" data-en="About Bakpia Kukus Tugu Jogja">Tentang Bakpia Kukus Tugu Jogja</div>
+        <div class="tentang-text t" data-id="Bakpia Kukus Tugu Jogja adalah pelopor bakpia kukus pertama di Yogyakarta. Hadir sebagai oleh-oleh premium khas Wong Jogja dengan cita rasa autentik namun tampilan modern." data-en="Bakpia Kukus Tugu Jogja is the pioneer of steamed bakpia in Yogyakarta. Presented as a premium souvenir from Jogja with authentic taste in a modern presentation.">Bakpia Kukus Tugu Jogja adalah pelopor bakpia kukus pertama di Yogyakarta. Hadir sebagai oleh-oleh premium khas Wong Jogja dengan cita rasa autentik namun tampilan modern.</div>
+        <div class="pain-point">
+          <div class="pain-title t" data-id="💡 Kenapa Pesan via QR Menu ini?" data-en="💡 Why Order via This QR Menu?">💡 Kenapa Pesan via QR Menu ini?</div>
+          <div class="pain-item t" data-id="Tidak perlu antre panjang di outlet stasiun atau bandara" data-en="No need to queue at station or airport outlets">Tidak perlu antre panjang di outlet stasiun atau bandara</div>
+          <div class="pain-item t" data-id="Pesan dari perjalanan, tinggal ambil saat tiba" data-en="Order on the go, just pick up on arrival">Pesan dari perjalanan, tinggal ambil saat tiba</div>
+          <div class="pain-item t" data-id="Stok terjamin — tidak kehabisan varian favorit" data-en="Guaranteed stock — never miss your favorite flavor">Stok terjamin — tidak kehabisan varian favorit</div>
+          <div class="pain-item t" data-id="Cocok untuk yang waktu keberangkatannya mepet" data-en="Perfect for travelers with tight departure schedules">Cocok untuk yang waktu keberangkatannya mepet</div>
+        </div>
+      </div>
+      <div class="vs-card">
+        <div class="vs-title t" data-id="⚖️ Kenapa Pilih Kami?" data-en="⚖️ Why Choose Us?">⚖️ Kenapa Pilih Kami?</div>
+        <table class="vs-table">
+          <thead><tr>
+            <th class="t" data-id="Brand" data-en="Brand">Brand</th>
+            <th class="t" data-id="Harga" data-en="Price">Harga</th>
+            <th class="t" data-id="Keunggulan" data-en="Notes">Keunggulan</th>
+          </tr></thead>
+          <tbody>
+            <tr class="kita"><td>🥮 Bakpia Tugu</td><td>38–50rb</td><td class="t" data-id="Kukus, lembut, modern, bervariasi" data-en="Steamed, soft, modern, varied">Kukus, lembut, modern</td></tr>
+            <tr><td>Pathok 25</td><td>35–50rb</td><td class="t" data-id="Tekstur kering, kurang modern" data-en="Dry texture, less modern">Tekstur kering</td></tr>
+            <tr><td>Mutiara</td><td>40–55rb</td><td class="t" data-id="Cepat keras, kadaluarsa singkat" data-en="Hardens quickly, short shelf life">Cepat keras</td></tr>
+            <tr><td>Bakpiaku</td><td>15–30rb</td><td class="t" data-id="Ukuran kecil, varian terbatas" data-en="Smaller size, limited flavors">Varian terbatas</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="payment-card">
+        <div class="payment-title">📞 <span class="t" data-id="Kontak & CS" data-en="Contact & CS">Kontak & CS</span></div>
+        <div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px;border-bottom:1px solid var(--krem-gelap)"><span style="color:var(--teks-redup)">Hotline</span><span style="font-weight:600">1500625</span></div>
+        <div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px;border-bottom:1px solid var(--krem-gelap)"><span style="color:var(--teks-redup)">WhatsApp</span><span style="font-weight:600">0811-1500-625</span></div>
+        <div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px"><span style="color:var(--teks-redup)" class="t" data-id="Jam Buka" data-en="Opening Hours">Jam Buka</span><span style="font-weight:600">06.00 – 22.00</span></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer">
+    <div class="footer-line"></div>
+    <span class="t" data-id="Harga dapat berbeda antar outlet & promo" data-en="Prices may vary by outlet & promotions">Harga dapat berbeda antar outlet & promo</span><br>
+    <span class="t" data-id="Dibuat oleh" data-en="Powered by">Dibuat oleh</span> <strong>Rashya Digital</strong> · Klaten
+  </div>
+</div>
+
+<!-- STICKY WA -->
+<div class="wa-sticky" id="wa-sticky">
+  <a class="wa-btn" id="wa-link" href="#" target="_blank">
+    <span style="font-size:20px">💬</span>
+    <span id="wa-label" class="t" data-id="Pesan via WhatsApp Sekarang" data-en="Order via WhatsApp Now">Pesan via WhatsApp Sekarang</span>
+  </a>
+</div>
+
+<script>
+  let lang = 'id';
+  let outletDipilih = '';
+  let outletMapsUrl = '#';
+  let outletOpenH = 6;
+  let outletCloseH = 22;
+
+  const outletLabels = {
+    'Stasiun Tugu': 'Store Stasiun Tugu - Pintu Selatan',
+    'Stasiun Lempuyangan': 'Store Stasiun Lempuyangan',
+    'Bandara YIA': 'Store Bandara YIA - Zona Kedatangan',
+    'Titik Nol Malioboro': 'Store Titik Nol - dekat Malioboro',
+    'Pusat Gondomanan': 'Store Pusat Gondomanan',
+    'Raya Solo': 'Store Raya Solo - KM 9'
+  };
+
+  /* ===== LANGUAGE ===== */
+  function setLang(l) {
+    lang = l;
+    document.querySelectorAll('.lang-btn').forEach(b => {
+      b.classList.toggle('active', b.textContent.includes(l === 'id' ? 'ID' : 'EN'));
+    });
+    document.querySelectorAll('.menu-lang-btn').forEach(b => {
+      b.classList.toggle('active', b.textContent.trim() === l.toUpperCase());
+    });
+    document.querySelectorAll('.t[data-' + l + ']').forEach(el => {
+      el.textContent = el.getAttribute('data-' + l);
+    });
+    updateWALinks();
+  }
+
+  /* ===== COUNTDOWN ===== */
+  function getCountdownText(openH, closeH) {
+    const now = new Date();
+    const total = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+    const openS = openH * 3600, closeS = closeH * 3600;
+    const is24 = openH === 0 && closeH >= 23;
+    if (is24) return { open: true, text: lang === 'id' ? '🟢 Buka 24 Jam' : '🟢 Open 24H' };
+    if (total >= openS && total < closeS) {
+      const d = closeS - total;
+      return { open: true, text: (lang==='id'?'🟢 Tutup ':'🟢 Closes ') + fmt(d) };
+    } else {
+      const d = total < openS ? openS - total : (86400 - total) + openS;
+      return { open: false, text: (lang==='id'?'🔴 Buka ':'🔴 Opens ') + fmt(d) };
+    }
+  }
+  function fmt(sek) {
+    return String(Math.floor(sek/3600)).padStart(2,'0') + ':' +
+           String(Math.floor((sek%3600)/60)).padStart(2,'0') + ':' +
+           String(sek%60).padStart(2,'0');
+  }
+  function tickAll() {
+    const chips = [
+      {id:'cd-tugu', o:6, c:21}, {id:'cd-lempuyangan', o:6, c:22},
+      {id:'cd-titikol', o:6, c:22}, {id:'cd-gondomanan', o:6, c:22}, {id:'cd-solo', o:6, c:22}
+    ];
+    chips.forEach(ch => {
+      const el = document.getElementById(ch.id);
+      if (!el) return;
+      const r = getCountdownText(ch.o, ch.c);
+      el.className = 'countdown-chip ' + (r.open ? 'open' : 'closed');
+      el.textContent = r.text;
+    });
+    // menu countdown
+    if (outletDipilih) {
+      const el = document.getElementById('menu-countdown');
+      if (el) {
+        const r = getCountdownText(outletOpenH, outletCloseH);
+        el.className = 'outlet-countdown-display ' + (r.open ? 'open' : 'closed');
+        el.textContent = r.text;
+      }
+    }
+  }
+  setInterval(tickAll, 1000);
+  tickAll();
+
+  /* ===== OUTLET ===== */
+  function pilihOutlet(nama, alamat, jamBuka, jamTutup, mapsUrl) {
+    outletDipilih = nama;
+    outletMapsUrl = mapsUrl;
+    outletOpenH = parseInt(jamBuka);
+    outletCloseH = parseInt(jamTutup);
+    document.getElementById('nama-outlet-display').textContent = '📍 ' + nama;
+    document.getElementById('jam-outlet-display').textContent = '⏰ ' + jamBuka + ' – ' + jamTutup;
+    document.getElementById('maps-outlet-link').href = mapsUrl;
+    tickAll();
+    updateWALinks();
+    document.getElementById('outlet-screen').style.display = 'none';
+    document.getElementById('menu-screen').style.display = 'block';
+    document.getElementById('wa-sticky').classList.add('visible');
+    window.scrollTo(0,0);
+  }
+
+  function kembali() {
+    document.getElementById('menu-screen').style.display = 'none';
+    document.getElementById('outlet-screen').style.display = 'flex';
+    document.getElementById('wa-sticky').classList.remove('visible');
+    window.scrollTo(0,0);
+  }
+
+  function gantiTab(tab, btn) {
+    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-'+tab).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  /* ===== WA ===== */
+  function buatWA(produk) {
+    const outlet = outletLabels[outletDipilih] || outletDipilih;
+    const msg = lang === 'id'
+      ? `Halo Bakpia Kukus Tugu Jogja! 🥮\n\nSaya ingin memesan:\n📦 *${produk}*\n📍 Outlet: *${outlet}*\n\nMohon konfirmasi ketersediaan stok ya. Terima kasih!`
+      : `Hello Bakpia Kukus Tugu Jogja! 🥮\n\nI'd like to order:\n📦 *${produk}*\n📍 Outlet: *${outlet}*\n\nPlease confirm stock availability. Thank you!`;
+    return 'https://wa.me/628111500625?text=' + encodeURIComponent(msg);
+  }
+
+  function updateWALinks() {
+    const map = {
+      'order-cokelat': lang==='id'?'Bakpia Kukus Cokelat (Isi 10) - Rp 38.000':'Steamed Chocolate Bakpia (10 pcs) - Rp 38,000',
+      'order-keju': lang==='id'?'Bakpia Kukus Keju (Isi 10) - Rp 38.000':'Steamed Cheese Bakpia (10 pcs) - Rp 38,000',
+      'order-kacang': lang==='id'?'Bakpia Kukus Kacang Hijau (Isi 10) - Rp 38.000':'Steamed Mung Bean Bakpia (10 pcs) - Rp 38,000',
+      'order-strawberry': lang==='id'?'Bakpia Kukus Strawberry (Isi 10) - Rp 38.000':'Steamed Strawberry Bakpia (10 pcs) - Rp 38,000',
+      'order-matcha': lang==='id'?'Bakpia Kukus Matcha Jepang (Isi 10) - Rp 48.000':'Japanese Matcha Steamed Bakpia (10 pcs) - Rp 48,000',
+      'order-brownies-cokelat': lang==='id'?'Brownies Cokelat (Isi 10) - Rp 50.000':'Chocolate Brownies (10 pcs) - Rp 50,000',
+      'order-brownies-keju': lang==='id'?'Brownies Keju (Isi 10) - Rp 50.000':'Cheese Brownies (10 pcs) - Rp 50,000',
+      'order-mini-cokelat': lang==='id'?'Original Cokelat Mini Travel Pack (Isi 6) - Rp 28.000':'Mini Chocolate Travel Pack (6 pcs) - Rp 28,000',
+      'order-redvelvet': lang==='id'?'Red Velvet Choco Lava Travel Pack (Isi 6) - Rp 45.000':'Red Velvet Choco Lava Travel Pack (6 pcs) - Rp 45,000',
+      'order-panggang': lang==='id'?'Bakpia Panggang Cokelat (Isi 15) - Rp 35.000':'Baked Chocolate Bakpia (15 pcs) - Rp 35,000',
+    };
+    Object.entries(map).forEach(([id, produk]) => {
+      const el = document.getElementById(id);
+      if (el) el.href = buatWA(produk);
+    });
+    const outlet = outletLabels[outletDipilih] || outletDipilih;
+    const mainMsg = lang === 'id'
+      ? `Halo Bakpia Kukus Tugu Jogja! 🥮\n\nSaya ingin memesan dari outlet *${outlet}*.\n\nBoleh info menu & ketersediaan stok hari ini? Terima kasih!`
+      : `Hello Bakpia Kukus Tugu Jogja! 🥮\n\nI'd like to order from *${outlet}*.\n\nCould you share today's menu & stock availability? Thank you!`;
+    document.getElementById('wa-link').href = 'https://wa.me/628111500625?text=' + encodeURIComponent(mainMsg);
+  }
+</script>
+</body>
+</html>
